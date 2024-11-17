@@ -1,20 +1,72 @@
-var socket = io.connect('http://' + document.domain + ':' + location.port); //create var socket which connects to location
+$(document).ready(function() {
+ 
+    var socket = io.connect('http://' + document.domain + ':' + location.port); // initialize socket
 
-socket.on('connect', function() {
-    console.log('Connected to server');
+
+    $('#user-modal').show();
+
+ 
+    $('#user-form').submit(function(event) {
+        event.preventDefault();
+        var username = $('#username').val().trim();
+        var language = $('#language').val().trim().toLowerCase();
+
+        if (username === '' || language === '') {
+            alert('Please enter both username and language.');
+            return;
+        }
+
+        console.log('Joining chat with username:', username, 'and language:', language);
+
+        //Hide modal when user submits
+        $('#user-modal').hide();
+        $('#chat-container').show();
+
+      
+        socket.emit('join', { 'username': username, 'language': language });
+    });
+
+    //incoming messages
+    socket.on('message', function(data) {
+        console.log('Message received:', data);
+        var message = '<p><strong>' + data.user + ':</strong> ' + data.msg + '</p>';
+        $('#chat-messages').append(message);
+        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+    });
+
+    // Handle status updates (user joins or leaves)
+    socket.on('status', function(data) {
+        console.log('Status update:', data);
+        var status = '<p><em>' + data.msg + '</em></p>';
+        $('#chat-messages').append(status);
+        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+    });
+
+    // Send message on button click
+    $('#send').click(function() {
+        sendMessage();
+    });
+
+    // Send message on Enter key press
+    $('#message').keypress(function(e) {
+        if (e.which == 13) { 
+            sendMessage();
+        }
+    });
+
+    // Function to send message
+    function sendMessage() {
+        var message = $('#message').val().trim();
+        if (message === '') {
+            return;
+        }
+
+        console.log('Sending message:', message);
+
+        // Emit message event
+        socket.emit('message', { 'msg': message });
+
+        // Clear the input field after sending a message
+        $('#message').val('');
+    }
 });
-
-socket.on('message', function(msg) { // gets chat messages and message element
-    var chatMessages = document.getElementById('chat-messages');
-    var messageElement = document.createElement('p');
-    messageElement.innerHTML = msg;
-    chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight; // scrolls to newest message element
-});
-
-document.getElementById('send').onclick = function() {
-    var messageInput = document.getElementById('message');
-    var message = messageInput.value;
-    socket.send(message); // send message to server
-    messageInput.value = '';
-};

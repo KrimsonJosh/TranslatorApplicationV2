@@ -2,43 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>realtime</title>
-    <style>
-        #chat {
-            max-width: 600px;
-            margin: 0 auto;
-            color:blue
-        }
-        #chat-messages {
-            border: 1px solid #ccc;
-            height: 400px;
-            overflow-y: scroll;
-            padding: 10px;
-        }
-        #chat-input {
-            margin-top: 10px;
-        }
-        #message {
-            width: 80%;
-            padding: 10px;
-        }
-        #send {
-            padding: 10px;
-        }
-    </style>
+    <title>Real-Time Chat Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+ 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script> 
 </head>
 <body>
-    <div id="chat">
-        <h2>Chat Room</h2>
+    <div id="chat-container" style="display: none;">
+        <h2>Real-Time Chat Room</h2>
         <div id="chat-messages"></div>
         <div id="chat-input">
-            <input type="text" id="message" placeholder="Enter your message">
+            <input type="text" id="message" placeholder="Enter your message here" autocomplete="off">
             <button id="send">Send</button>
         </div>
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
+    <div id="user-modal" class="modal"> 
+        <div class="modal-content">
+            <h3>Welcome to the Chat!</h3>
+            <form id="user-form">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username" required><br><br>
+                <label for="language">Preferred Language (e.g., en, es, fr):</label><br>
+                <input type="text" id="language" name="language" value="en" required><br><br>
+                <input type="submit" value="Join Chat">
+            </form>
+        </div>
+    </div>
 </body>
 </html>
