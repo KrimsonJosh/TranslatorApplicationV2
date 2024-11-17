@@ -2,10 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>realtimeee</title>
+    <title>realtime</title>
+    <style>
+        #chat {
+            max-width: 600px;
+            margin: 0 auto;
+            color:blue
+        }
+        #chat-messages {
+            border: 1px solid #ccc;
+            height: 400px;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+        #chat-input {
+            margin-top: 10px;
+        }
+        #message {
+            width: 80%;
+            padding: 10px;
+        }
+        #send {
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welc0me</h1>
+    <div id="chat">
+        <h2>Chat Room</h2>
+        <div id="chat-messages"></div>
+        <div id="chat-input">
+            <input type="text" id="message" placeholder="Enter your message">
+            <button id="send">Send</button>
+        </div>
+    </div>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 </body>
 </html>
