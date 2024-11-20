@@ -11,9 +11,6 @@ socketio = SocketIO(app)
 users = {}
 
 def translate_message(message, target_lang):
-    """
-    Translates the given message to the target language.
-    """
     try:
         return GoogleTranslator(source='auto', target=target_lang).translate(message)
     except Exception as e:
@@ -52,9 +49,6 @@ def handle_message(data):
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    """
-    Handles user disconnection.
-    """
     user = users.pop(request.sid, None)
     if user:
         username = user['username']
